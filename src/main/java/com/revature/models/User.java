@@ -1,19 +1,42 @@
 package com.revature.models;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name="users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
+
+    @Column(name="email", unique = true, nullable = false)
     private String email;
+
+    @Column(name="password", nullable = false)
     private String password;
+
+    @Column(name="first_name")
     private String firstName;
+
+    @Column(name="last_name")
     private String lastName;
-    private List<Book> checkedOut;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name="checked_out",
+            joinColumns = {@JoinColumn(name="book_id")},
+            inverseJoinColumns = {@JoinColumn(name="user_id")}
+    )
+    List<Book> checkedOut; // @JsonIgnore ??
+
+    @Column(name="user_role", nullable = false)
     private int userRole; // 1 = user, 2 = owner
 
-
-    public User() {
+    public User(){
+        this.checkedOut = new ArrayList<>();
     }
 
     public User(int userId, String email, String password, String firstName, String lastName, List<Book> checkedOut, int userRole) {
@@ -27,11 +50,13 @@ public class User {
     }
 
     public User(String email, String password, String firstName, String lastName, int userRole) {
+        this.userId = 0;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userRole = userRole;
+        this.checkedOut = new ArrayList<>();
     }
         //login object
     public User(String email, String password) {

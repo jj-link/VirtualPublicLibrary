@@ -1,14 +1,35 @@
 package com.revature.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="books")
 public class Book {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="book_id")
     private int bookId;
+
+    @Column(name="title", nullable = false)
     private String title;
+
+    @Column(name="author", nullable = false)
     private String author;
+
+    @Column(name="genre_id", nullable = false)
     private int genreId;
+
+    @Column(name="summary")
     private String summary;
+
+    @Column(name="checked_out_count")
     private int checkedOutCount;
+
+    @Column(name="isbn", nullable = false, unique = true)
     private long isbn;
+
+    @Column(name="year_published")
     private int yearPublished;
 
 
