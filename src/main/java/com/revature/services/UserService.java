@@ -25,11 +25,10 @@ public class UserService {
      * @param password user's password
      * @param first user's first name
      * @param last user's last name
-     * @param userRole user's role
      * @return returns the new user registered
      */
-    public User registerNewUser(String email, String password, String first, String last, int userRole){
-        User register = new User(email, password, first, last, userRole);
+    public User registerNewUser(String email, String password, String first, String last){
+        User register = new User(email, password, first, last);
         return ur.save(register);
     }
 
