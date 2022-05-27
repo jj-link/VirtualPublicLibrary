@@ -39,7 +39,6 @@ public class UserController {
     public ResponseEntity<Object> handleLoginUser(@RequestBody LinkedHashMap<String, String> body){
         String email = body.get("email");
         String password = body.get("password");
-
         try{
             return new ResponseEntity<>(us.loginUser(email, password), HttpStatus.ACCEPTED);
         }catch(Exception e){

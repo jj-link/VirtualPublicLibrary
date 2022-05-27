@@ -2,6 +2,7 @@ package com.revature.services;
 
 
 
+import com.revature.exceptions.NullUserException;
 import com.revature.models.User;
 import com.revature.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,11 @@ public class UserService {
      * @return email and password of the user logged in
      */
 
-    public User loginUser(String email, String password){
+    public User loginUser(String email, String password) throws NullUserException {
         User login = ur.findUserByEmailAndPassword(email, password);
+        if(login == null){
+            throw new NullUserException();
+        }
         return login;
     }
 }

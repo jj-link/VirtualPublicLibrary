@@ -58,7 +58,7 @@ public class User {
         this.userRole = userRole;
         this.checkedOut = new ArrayList<>();
     }
-        //login object
+    //login object
     public User(String email, String password) {
         this.email = email;
         this.password = password;
