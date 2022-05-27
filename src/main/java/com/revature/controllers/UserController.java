@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin("*")
 public class UserController {
 
     private UserService us;
@@ -24,12 +24,13 @@ public class UserController {
         this.us = us;
     }
 
-    @PostMapping("/user/")
+    @PostMapping("/user/register")
     public ResponseEntity<Object> handleRegisterUser(@RequestBody LinkedHashMap<String, String> body){
         try{
-            User u = us.registerNewUser(body.get("email"), body.get("password"), body.get("firstName"), body.get("lastName"), Integer.parseInt(body.get("userRole")));
+            User u = us.registerNewUser(body.get("email"), body.get("password"), body.get("firstName"), body.get("lastName"));
             return new ResponseEntity<>(u, HttpStatus.CREATED);
         }catch(Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>("Email already taken.", HttpStatus.CONFLICT);
         }
     }
@@ -38,7 +39,6 @@ public class UserController {
     public ResponseEntity<Object> handleLoginUser(@RequestBody LinkedHashMap<String, String> body){
         String email = body.get("email");
         String password = body.get("password");
-
         try{
             return new ResponseEntity<>(us.loginUser(email, password), HttpStatus.ACCEPTED);
         }catch(Exception e){
