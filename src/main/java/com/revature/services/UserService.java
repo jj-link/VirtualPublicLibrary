@@ -21,7 +21,6 @@ public class UserService {
     }
 
     /**
-     *
      * @param email user's email
      * @param password user's password
      * @param first user's first name
@@ -34,12 +33,10 @@ public class UserService {
     }
 
     /**
-     *
      * @param email user's email
      * @param password user's password
      * @return email and password of the user logged in
      */
-
     public User loginUser(String email, String password) throws NullUserException {
         User login = ur.findUserByEmailAndPassword(email, password);
         if(login == null){
@@ -47,4 +44,19 @@ public class UserService {
         }
         return login;
     }
+
+
+    public User updateUser(int id, String email, String password, String first, String last) {
+        User current = ur.findById(id).get();
+
+        current.setEmail(email);
+        current.setPassword(password);
+        current.setFirstName(first);
+        current.setLastName(last);
+
+        ur.save(current);
+
+        return current;
+    }
+
 }

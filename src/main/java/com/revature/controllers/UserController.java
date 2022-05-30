@@ -6,10 +6,7 @@ import com.revature.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 
@@ -41,6 +38,21 @@ public class UserController {
         String password = body.get("password");
         try{
             return new ResponseEntity<>(us.loginUser(email, password), HttpStatus.ACCEPTED);
+        }catch(Exception e){
+            return new ResponseEntity<>("Invalid email or password", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @PostMapping("/user/edit")
+    public ResponseEntity<Object> handleUpdateProfile(@RequestBody LinkedHashMap<String, String> body){
+        int id = Integer.parseInt(body.get("userId"));
+        String email = body.get("email");
+        String password = body.get("password");
+        String firstName = body.get("firstName");
+        String lastName = body.get("lastName");
+        try{
+            System.out.println("hello world");
+            return new ResponseEntity<>(us.updateUser(id, email, password, firstName, lastName), HttpStatus.ACCEPTED);
         }catch(Exception e){
             return new ResponseEntity<>("Invalid email or password", HttpStatus.NOT_ACCEPTABLE);
         }
