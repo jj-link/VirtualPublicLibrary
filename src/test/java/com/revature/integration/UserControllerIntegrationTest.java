@@ -42,9 +42,10 @@ public class UserControllerIntegrationTest {
 
     private ObjectMapper om = new ObjectMapper();
 
+    // tests for registerNewUser -------------------------------------------------
     @Test
     @Transactional
-    public void testRegisterUserSuccessful() throws Exception {
+    public void testRegisterNewUserSuccessful() throws Exception {
         LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
 
         registerBody.put("email", "tuser@mail.com");
@@ -52,7 +53,7 @@ public class UserControllerIntegrationTest {
         registerBody.put("firstName", "Test");
         registerBody.put("lastName", "User");
 
-        mockMvc.perform(post("/user/")
+        mockMvc.perform(post("/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(registerBody))
         )
@@ -63,19 +64,18 @@ public class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.firstName").value("Test"))
                 .andExpect(jsonPath("$.lastName").value("User"));
 
-        /*
         User registered = ur.findUserByEmail("tuser@mail.com");
 
         assertEquals("tuser@mail.com", registered.getEmail());
         assertEquals("password", registered.getPassword());
         assertEquals("Test", registered.getFirstName());
-        assertEquals("user", registered.getLastName());
-        */
+        assertEquals("User", registered.getLastName());
+
     }
 
     @Test
     @Transactional
-    public void testRegisterUserUnsuccessful() throws Exception {
+    public void testRegisterNewUserUnsuccessful() throws Exception {
         LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
 
         registerBody.put("email", "test@email.com");
@@ -83,15 +83,20 @@ public class UserControllerIntegrationTest {
         registerBody.put("firstName", "TestFirstName");
         registerBody.put("lastName", "TestLastName");
 
-        ur.save(new User(registerBody.get("email"), registerBody.get("password"), registerBody.get("firstName"), registerBody.get("lastName"), 1));
+        ur.save(new User(registerBody.get("email"), registerBody.get("password"), registerBody.get("firstName"), registerBody.get("lastName")));
 
         mockMvc.perform(post("/user/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(registerBody))
                 )
                 .andDo(print())
-                .andExpect(status().isConflict());
+                // .andExpect(status().isConflict());
+                .andExpect(status().isInternalServerError());
 
     }
+
+    // tests for loginUser -------------------------------------------------
+
+
 
 }

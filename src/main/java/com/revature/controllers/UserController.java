@@ -57,7 +57,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/view_user")
+    @GetMapping("/user/view-user")
     public ResponseEntity<Object> handleFindUserById(@RequestBody LinkedHashMap<String, String> body) {
         int id = Integer.parseInt(body.get("userId"));
         try {

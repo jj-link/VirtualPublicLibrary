@@ -2,6 +2,7 @@ package com.revature.services;
 
 
 
+import com.revature.exceptions.ExistingUserException;
 import com.revature.exceptions.NullUserException;
 import com.revature.models.User;
 import com.revature.repo.UserRepo;
@@ -28,7 +29,10 @@ public class UserService {
      * @param last user's last name
      * @return returns the new user registered
      */
-    public User registerNewUser(String email, String password, String first, String last){
+    public User registerNewUser(String email, String password, String first, String last) throws ExistingUserException {
+        if (ur.findUserByEmail(email) != null) {
+            throw new ExistingUserException("This email is already taken");
+        }
         User register = new User(email, password, first, last);
         return ur.save(register);
     }
