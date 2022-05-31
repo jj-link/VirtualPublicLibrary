@@ -21,6 +21,7 @@ public class UserService {
     }
 
     /**
+     * Registers a new user
      * @param email user's email
      * @param password user's password
      * @param first user's first name
@@ -33,6 +34,7 @@ public class UserService {
     }
 
     /**
+     * Logs in a user
      * @param email user's email
      * @param password user's password
      * @return email and password of the user logged in
@@ -45,7 +47,15 @@ public class UserService {
         return login;
     }
 
-
+    /**
+     * Updates a user's info
+     * @param id The id of the user to update
+     * @param email The user's new email
+     * @param password The user's new password
+     * @param first The user's new first name
+     * @param last The user's new last name
+     * @return The User with the updated information
+     */
     public User updateUser(int id, String email, String password, String first, String last) {
         User current = ur.findById(id).get();
 
@@ -58,5 +68,20 @@ public class UserService {
 
         return current;
     }
+
+    /**
+     * Finds a user by their id
+     * @param id The id of the user to find
+     * @return The specified user
+     */
+    public User findUserById(int id){
+        User getUser = ur.findById(id).get();
+        return getUser;
+    }
+
+    // delete
+
+
+    // get all users
 
 }

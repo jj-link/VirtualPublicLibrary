@@ -51,10 +51,19 @@ public class UserController {
         String firstName = body.get("firstName");
         String lastName = body.get("lastName");
         try{
-            System.out.println("hello world");
             return new ResponseEntity<>(us.updateUser(id, email, password, firstName, lastName), HttpStatus.ACCEPTED);
         }catch(Exception e){
             return new ResponseEntity<>("Invalid email or password", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/user/view_user")
+    public ResponseEntity<Object> handleFindUserById(@RequestBody LinkedHashMap<String, String> body) {
+        int id = Integer.parseInt(body.get("userId"));
+        try {
+            return new ResponseEntity<>(us.findUserById(id), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Invalid user id", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
