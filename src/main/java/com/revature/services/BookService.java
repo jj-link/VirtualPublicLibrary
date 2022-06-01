@@ -2,6 +2,8 @@ package com.revature.services;
 
 import com.revature.exceptions.ExistingBookException;
 import com.revature.exceptions.ExistingUserException;
+import com.revature.exceptions.NullBookException;
+import com.revature.exceptions.NullUserException;
 import com.revature.models.Book;
 import com.revature.models.User;
 import com.revature.repo.BookRepo;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -54,20 +57,48 @@ public class BookService {
 
     // get book by title
 
-    public Book getBookByTitle(String title){
+    public Book getBookByTitle(String title) throws NullBookException {
         Book getBook = br.findBookByTitle(title);
+        if(getBook == null){
+            throw new NullBookException();
+        }
         return getBook;
     }
     // get book by author
 
+    public List<Book> getBookByAuthor(String author) throws NullBookException {
+        List <Book> bookList = new ArrayList<>();
+        bookList = br.findAllBookByAuthor(author);
+        if(bookList.isEmpty()){
+            throw new NullBookException();
+        }
+        return bookList;
+    }
 
     // get list of book by genreId
-
+    public List<Book> getBookByGenreId(int genreId){
+        return br.findAllByGenreId(genreId);
+    }
     // get book by isbn
+    public Book getBookByIsbn(long isbn) throws NullBookException {
+        Book getBook = br.findBookByIsbn(isbn);
+        if(getBook == null){
+            throw new NullBookException();
+        }
+        return getBook;
+    }
+
 
 
     // get all of a user's checked out books
 
     // delete
+    public void deleteBookByIsbn(long isbn) throws NullBookException {
+        Book getBook = br.findBookByIsbn(isbn);
+        if(getBook == null){
+            throw new NullBookException();
+        }
+        br.delete(getBook);
+    }
 
 }

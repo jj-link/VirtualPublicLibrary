@@ -45,5 +45,61 @@ public class BookController {
         }
     }
 
+    @GetMapping("/book/get-books-by-title")
+    public ResponseEntity<Object> handleGetBooksByTitle(@RequestBody LinkedHashMap<String, String> body) {
+        try {
+            String title = body.get("title");
+            return new ResponseEntity<>(bs.getBookByTitle(title), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Could not find this book", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/book/get-books-by-author")
+    public ResponseEntity<Object> handleGetBooksByAuthor(@RequestBody LinkedHashMap<String, String> body) {
+        try {
+            String author = body.get("author");
+            return new ResponseEntity<>(bs.getBookByAuthor(author), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Could not find this book", HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/book/get-books-by-isbn")
+    public ResponseEntity<Object> handleGetBooksByIsbn(@RequestBody LinkedHashMap<String, String> body) {
+        try {
+            long isbn = Long.parseLong(body.get("isbn"));
+            return new ResponseEntity<>(bs.getBookByIsbn(isbn), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Could not find this book", HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/book/get-books-by-genreId")
+    public ResponseEntity<Object> handleGetBooksByGenreId(@RequestBody LinkedHashMap<String, String> body) {
+        try {
+            int genreId = Integer.parseInt(body.get("genreId"));
+            return new ResponseEntity<>(bs.getBookByGenreId(genreId), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Could not find this book", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/book/remove-books-by-isbn")
+    public ResponseEntity<Object> handleDeleteBooksByIsbn(@RequestBody LinkedHashMap<String, String> body) {
+        try {
+            long isbn = Long.parseLong(body.get("isbn"));
+            bs.deleteBookByIsbn(isbn);
+            String message = "Book with isbn " + isbn + " has been delete";
+            return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Could not find this book", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 
 }
