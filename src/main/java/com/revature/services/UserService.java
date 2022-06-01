@@ -3,12 +3,18 @@ package com.revature.services;
 
 
 import com.revature.exceptions.ExistingUserException;
+import com.revature.exceptions.NullBookException;
 import com.revature.exceptions.NullUserException;
+import com.revature.models.Book;
 import com.revature.models.User;
 import com.revature.repo.UserRepo;
+import com.revature.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import javax.jws.Oneway;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +23,14 @@ import java.util.List;
 @Transactional
 public class UserService {
     private UserRepo ur;
+    @Autowired
+    private EmailUtil emailUtil;
+    private BookService bs;
 
     @Autowired
-    public UserService(UserRepo ur){
+    public UserService(UserRepo ur, BookService bs){
         this.ur = ur;
+        this.bs = bs;
     }
 
     /**
@@ -36,6 +46,8 @@ public class UserService {
             throw new ExistingUserException("This email is already taken");
         }
         User register = new User(email, password, first, last);
+        String body = emailUtil.generateWelcomeEmail(first, last);
+        emailUtil.sendEmail(email, "Welcome to the Virtual Public Library!", body);
         return ur.save(register);
     }
 
@@ -93,9 +105,22 @@ public class UserService {
         return ur.findAll();
     }
 
-    // delete
+    /**
+     *
+     * @param userId
+     * @param isbn
+     * @throws NullBookException
+     */
+    public void checkOutBook(int userId, long isbn) throws NullBookException {
+        Book currentBook = bs.getBookByIsbn(isbn);
+        User user = ur.findById(userId).get();
+        user.addCheckOut(currentBook);
+        ur.save(user);
+        bs.checkOutBook(isbn);
+    }
 
-
-    // get all users
+    public List<Book> getCheckedOutBooks(int userId){
+        return ur.findById(userId).get().getCheckedOut();
+    }
 
 }

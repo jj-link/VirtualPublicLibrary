@@ -100,6 +100,15 @@ public class BookController {
         }
     }
 
+    @GetMapping("/book/get-books-most-popular")
+    public ResponseEntity<Object> handleGetBookPopular() {
+        try {
+            return new ResponseEntity<>(bs.getMostPopularBooks(), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("There is no book in library", HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }
