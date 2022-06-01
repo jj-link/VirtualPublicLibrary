@@ -9,7 +9,7 @@
 - Logout
 - view homepage
 - view book catalogue
-- use search fileter by genre to find specific books
+- use search filter by genre to find specific books
 - checkout books
 - receive confirmation email
 - view previously checked out books
