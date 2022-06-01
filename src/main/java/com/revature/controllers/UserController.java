@@ -67,4 +67,13 @@ public class UserController {
         }
     }
 
+    @GetMapping("/user/all-users")
+    public ResponseEntity<Object> handleGetAllUsers() {
+        try {
+            return new ResponseEntity<>(us.getAllUsers(), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Could not get all users", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
 }

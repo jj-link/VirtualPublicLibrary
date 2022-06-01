@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -81,6 +83,14 @@ public class UserService {
     public User findUserById(int id){
         User getUser = ur.findById(id).get();
         return getUser;
+    }
+
+    /**
+     * Gets all users
+     * @return A list of all users
+     */
+    public List<User> getAllUsers(){
+        return ur.findAll();
     }
 
     // delete
