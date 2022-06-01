@@ -46,12 +46,18 @@ public class BookService {
     }
 
     // update
-    public Book updateBook(Book book) {
+    public Book updateBook(int id, String title, String author, int genreId, String summary, long isbn, int year) {
+        Book book = br.findById(id).get();
 
-        return book;
+        if (!title.equals("")) book.setTitle(title);
+        if (!author.equals("")) book.setAuthor(author);
+        if (genreId != 0) book.setGenreId(genreId);
+        if (!summary.equals("")) book.setSummary(summary);
+        if (isbn != 0) book.setIsbn(isbn);
+        if (year != 0) book.setYearPublished(year);
+
+        return br.save(book);
     }
-
-    // get all books
 
     /**
      * Get all books
@@ -163,7 +169,5 @@ public class BookService {
         book.setCheckedOutCount(currentBookCheckOut);
         br.save(book);
     }
-
-
 
 }

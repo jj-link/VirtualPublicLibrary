@@ -77,10 +77,10 @@ public class UserService {
     public User updateUser(int id, String email, String password, String first, String last) {
         User current = ur.findById(id).get();
 
-        current.setEmail(email);
-        current.setPassword(password);
-        current.setFirstName(first);
-        current.setLastName(last);
+        if (!email.equals("")) current.setEmail(email);
+        if (!password.equals("") ) current.setPassword(password);
+        if (!first.equals("")) current.setFirstName(first);
+        if (!last.equals("")) current.setLastName(last);
 
         ur.save(current);
 
@@ -106,10 +106,10 @@ public class UserService {
     }
 
     /**
-     *
-     * @param userId
-     * @param isbn
-     * @throws NullBookException
+     * Checks out a book
+     * @param userId The user id of the user checking out the book
+     * @param isbn The ISBN of the book being checked out
+     * @throws NullBookException The book must exist
      */
     public void checkOutBook(int userId, long isbn) throws NullBookException {
         Book currentBook = bs.getBookByIsbn(isbn);
@@ -119,6 +119,11 @@ public class UserService {
         bs.checkOutBook(isbn);
     }
 
+    /**
+     * Get the checked out books from a user
+     * @param userId The user from whom to get the checked out books
+     * @return A list of the user's checked out books
+     */
     public List<Book> getCheckedOutBooks(int userId){
         return ur.findById(userId).get().getCheckedOut();
     }

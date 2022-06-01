@@ -110,5 +110,19 @@ public class BookController {
         }
     }
 
+    @PutMapping("/book/update")
+    public ResponseEntity<Object> handleUpdateBook(@RequestBody LinkedHashMap<String, String> body) {
+        try {
+            int id = Integer.parseInt(body.get("bookId"));
+            int genreId = Integer.parseInt(body.get("genreId"));
+            long isbn = Long.parseLong(body.get("isbn"));
+            int yearPublished = Integer.parseInt(body.get("yearPublished"));
+            Book book = bs.updateBook(id, body.get("title"), body.get("author"), genreId, body.get("summary"), isbn, yearPublished);
+            return new ResponseEntity<>(book, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Could not update book", HttpStatus.CONFLICT);
+        }
+    }
 
 }
