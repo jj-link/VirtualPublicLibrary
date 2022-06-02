@@ -43,7 +43,17 @@ public class BookService {
         return br.save(result);
     }
 
-    // update
+    /**
+     * Updates an existing book
+     * @param id The id of the book
+     * @param title The book's title
+     * @param author The book's author
+     * @param genreId The book's genre
+     * @param summary The book's summary
+     * @param isbn The book's ISBN
+     * @param year The year the book was published
+     * @return The newly updated book
+     */
     public Book updateBook(int id, String title, String author, int genreId, String summary, long isbn, int year) {
         Book book = br.findById(id).get();
 

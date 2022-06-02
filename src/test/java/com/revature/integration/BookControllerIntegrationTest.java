@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.VirtualPublicLibraryApplication;
 import com.revature.models.Book;
 import com.revature.repo.BookRepo;
-import com.revature.repo.UserRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -44,6 +44,44 @@ public class BookControllerIntegrationTest {
 
     private ObjectMapper om = new ObjectMapper();
 
+    // tests for createBook ---------------------------------------------------
+    @Test
+    @Transactional
+    public void testCreateBookSuccessful() throws Exception {
+        LinkedHashMap<String, String> body = new LinkedHashMap<>();
+
+        // String title, String author, int genreId, String summary, long isbn, int yearPublished
+
+        body.put("title", "Test Book");
+        body.put("author", "Test Author");
+        body.put("genreId", "1");
+        body.put("summary", "Test summary");
+        body.put("isbn", "9781111111111");
+        body.put("yearPublished", "1970");
+
+        mockMvc.perform(post("/book/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(body))
+        )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.title").value("Test Book"))
+                .andExpect(jsonPath("$.author").value("Test Author"))
+                .andExpect(jsonPath("$.genreId").value("1"))
+                .andExpect(jsonPath("$.summary").value("Test summary"))
+                .andExpect(jsonPath("$.isbn").value("9781111111111"))
+                .andExpect(jsonPath("$.yearPublished").value("1970"));
+
+        Book book = br.findBookByIsbn(9781111111111l);
+
+        assertEquals("Test Book", book.getTitle());
+        assertEquals("Test Author", book.getAuthor());
+        assertEquals(1, book.getGenreId());
+        assertEquals("Test summary", book.getSummary());
+        assertEquals(9781111111111l, book.getIsbn());
+        assertEquals(1970, book.getYearPublished());
+    }
+
     // tests for getBookByIsbn ------------------------------------------------
 
     @Test
@@ -63,6 +101,7 @@ public class BookControllerIntegrationTest {
                 .andExpect(status().isAccepted());
 
         Book getBook = br.findBookByIsbn(9781848820319l);
+
         assertEquals("Principles of Programming Languages", getBook.getTitle());
         assertEquals("Ian Mackie", getBook.getAuthor());
         assertEquals(3, getBook.getGenreId());
@@ -127,9 +166,8 @@ public class BookControllerIntegrationTest {
         assertEquals(9781848820319l, getBook.getIsbn());
         assertEquals("Programming teaching basic", getBook.getSummary());
         assertEquals(2014, getBook.getYearPublished());
-
     }
 
-    // test for 
+    // test for
 
 }
