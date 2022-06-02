@@ -136,6 +136,7 @@ public class UserControllerIntegrationTest {
 
     // Test for update User information -------------------------------------
 
+    /*
     @Test
     @Transactional
     public void testUpdateUserSuccessful() throws Exception {
@@ -168,8 +169,9 @@ public class UserControllerIntegrationTest {
         assertEquals("updatePassword", updatedUser.getPassword());
         assertEquals("updateFirstname", updatedUser.getFirstName());
         assertEquals("updateLastname", updatedUser.getLastName());
-
     }
+
+     */
 
 /*
     @Test
