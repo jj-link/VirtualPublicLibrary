@@ -3,24 +3,30 @@ package com.revature.services;
 
 
 import com.revature.exceptions.ExistingUserException;
+import com.revature.exceptions.NullBookException;
 import com.revature.exceptions.NullUserException;
+import com.revature.models.Book;
 import com.revature.models.User;
 import com.revature.repo.UserRepo;
+import com.revature.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
 public class UserService {
     private UserRepo ur;
+    @Autowired
+    private EmailUtil emailUtil;
+    private BookService bs;
 
     @Autowired
-    public UserService(UserRepo ur){
+    public UserService(UserRepo ur, BookService bs){
         this.ur = ur;
+        this.bs = bs;
     }
 
     /**
@@ -36,6 +42,8 @@ public class UserService {
             throw new ExistingUserException("This email is already taken");
         }
         User register = new User(email, password, first, last);
+        String body = emailUtil.generateWelcomeEmail(first, last);
+        emailUtil.sendEmail(email, "Welcome to the Virtual Public Library!", body);
         return ur.save(register);
     }
 
@@ -65,10 +73,10 @@ public class UserService {
     public User updateUser(int id, String email, String password, String first, String last) {
         User current = ur.findById(id).get();
 
-        current.setEmail(email);
-        current.setPassword(password);
-        current.setFirstName(first);
-        current.setLastName(last);
+        if (!email.equals("")) current.setEmail(email);
+        if (!password.equals("") ) current.setPassword(password);
+        if (!first.equals("")) current.setFirstName(first);
+        if (!last.equals("")) current.setLastName(last);
 
         ur.save(current);
 
@@ -93,9 +101,27 @@ public class UserService {
         return ur.findAll();
     }
 
-    // delete
+    /**
+     * Checks out a book
+     * @param userId The user id of the user checking out the book
+     * @param isbn The ISBN of the book being checked out
+     * @throws NullBookException The book must exist
+     */
+    public void checkOutBook(int userId, long isbn) throws NullBookException {
+        Book currentBook = bs.getBookByIsbn(isbn);
+        User user = ur.findById(userId).get();
+        user.addCheckOut(currentBook);
+        ur.save(user);
+        bs.checkOutBook(isbn);
+    }
 
-
-    // get all users
+    /**
+     * Get the checked out books from a user
+     * @param userId The user from whom to get the checked out books
+     * @return A list of the user's checked out books
+     */
+    public List<Book> getCheckedOutBooks(int userId){
+        return ur.findById(userId).get().getCheckedOut();
+    }
 
 }

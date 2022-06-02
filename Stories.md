@@ -4,7 +4,6 @@
 ## As a user I can:
 
 - Register a new account
-
 - Login
 - Logout
 - view homepage
@@ -12,7 +11,7 @@
 - use search filter by genre to find specific books
 - checkout books
 - receive confirmation email
-- view previously checked out books
+- view checked out books
 - view account information
 - edit account information
 - (Optional) add more search filters
@@ -31,3 +30,17 @@
 - Edit book information
 - View all user information
 - view books checked out by a particular user
+
+# TO DO
+
+## User Stories (optional)
+
+- (Optional) add more search filters (year)
+- (Optional): send email with temporary password
+- (Optional): Receive email about recently added books
+- (Optional): View popularity metrics for books
+- (Optional): Multiple genres per book
+
+## Tests
+
+## Log4j

@@ -128,6 +128,10 @@ public class User {
         this.userRole = userRole;
     }
 
+    public void addCheckOut(Book book){
+        this.checkedOut.add(book);
+    }
+
     @Override
     public String toString() {
         return "User{" +
