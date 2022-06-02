@@ -125,4 +125,14 @@ public class BookController {
         }
     }
 
+    @GetMapping("/book/recent")
+    public ResponseEntity<Object> handleGetRecentBooks() {
+        try {
+            return new ResponseEntity<>(bs.getRecentBooks(), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Could not find most recent books", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
 }

@@ -1,18 +1,16 @@
 package com.revature.services;
 
 import com.revature.exceptions.ExistingBookException;
-import com.revature.exceptions.ExistingUserException;
 import com.revature.exceptions.NullBookException;
-import com.revature.exceptions.NullUserException;
 import com.revature.models.Book;
-import com.revature.models.User;
 import com.revature.repo.BookRepo;
+import com.revature.utils.BookCheckedOutComparator;
+import com.revature.utils.BookIdComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -89,7 +87,7 @@ public class BookService {
      */
     public List<Book> getBookByAuthor(String author) throws NullBookException {
         List <Book> bookList = new ArrayList<>();
-        bookList = br.findAllBookByAuthor(author);
+        bookList = br.findAllBooksByAuthor(author);
         if(bookList.isEmpty()){
             throw new NullBookException();
         }
@@ -133,28 +131,20 @@ public class BookService {
     }
 
     /**
-     * Gets the most popular books
+     * Gets the top 10 most popular books
      * @return A list of the most popular books
      * @throws NullBookException
      */
-    public List<Book> getMostPopularBooks() throws NullBookException {
-        List <Book >bookList = br.findAll();
-        if (bookList.isEmpty()){
-            throw new NullBookException();
+    public List<Book> getMostPopularBooks() {
+        List<Book> result = new ArrayList<>();
+        List<Book> allBooks = br.findAll();
+        Collections.sort(allBooks, new BookCheckedOutComparator());
+        Collections.reverse(allBooks);
+        for (int i = 0; i < 10; i++) {
+            if (i == allBooks.size()) break;
+            result.add(allBooks.get(i));
         }
-        int temp = 0;
-        List <Book> popularBookList = new ArrayList<>();
-        for ( Book currentBook : bookList ) {
-            if (currentBook.getCheckedOutCount() > temp){
-                popularBookList.clear();
-                temp = currentBook.getCheckedOutCount();
-                popularBookList.add(currentBook);
-            } else if (currentBook.getCheckedOutCount() == temp){
-                popularBookList.add(currentBook);
-            }
-
-        }
-        return popularBookList;
+        return result;
     }
 
     /**
@@ -163,11 +153,26 @@ public class BookService {
      * @throws NullBookException The book might not exist
      */
     public void checkOutBook(long isbn) throws NullBookException{
-
         Book book = getBookByIsbn(isbn);
         int currentBookCheckOut = book.getCheckedOutCount() + 1;
         book.setCheckedOutCount(currentBookCheckOut);
         br.save(book);
+    }
+
+    /**
+     * Gets the most recent books added
+     * @return A list of the top 10 recently added books
+     */
+    public List<Book> getRecentBooks() {
+        List<Book> result = new ArrayList<>();
+        List<Book> allBooks = br.findAll();
+        Collections.sort(allBooks, new BookIdComparator());
+        Collections.reverse(allBooks);
+        for (int i = 0; i < 10; i++) {
+            if (i == allBooks.size()) break;
+            result.add(allBooks.get(i));
+        }
+        return result;
     }
 
 }
