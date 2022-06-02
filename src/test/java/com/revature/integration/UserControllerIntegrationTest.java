@@ -98,6 +98,7 @@ public class UserControllerIntegrationTest {
 
     // tests for loginUser -------------------------------------------------
 
+
     @Test
     @Transactional
     public void testLoginUserSuccessful() throws Exception{
@@ -135,7 +136,6 @@ public class UserControllerIntegrationTest {
 
     // Test for update User information -------------------------------------
 
-    /*
     @Test
     @Transactional
     public void testUpdateUserSuccessful() throws Exception {
@@ -171,8 +171,6 @@ public class UserControllerIntegrationTest {
 
     }
 
-     */
-
 /*
     @Test
     @Transactional
@@ -197,7 +195,9 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().isNotAcceptable());
 
     }
+
     // Test for view user info -------------------------------------
+
     @Test
     @Transactional
     public void testViewUserSuccessful() throws Exception {

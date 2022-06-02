@@ -10,13 +10,9 @@ import com.revature.models.User;
 import com.revature.repo.UserRepo;
 import com.revature.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import javax.jws.Oneway;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

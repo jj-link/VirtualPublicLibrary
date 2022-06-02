@@ -31,12 +31,16 @@
 - View all user information
 - view books checked out by a particular user
 
-# Progress
+# TO DO
 
-## User Stories
+## User Stories (optional)
 
 - (Optional) add more search filters (year)
 - (Optional): send email with temporary password
 - (Optional): Receive email about recently added books
 - (Optional): View popularity metrics for books
 - (Optional): Multiple genres per book
+
+## Tests
+
+## Log4j

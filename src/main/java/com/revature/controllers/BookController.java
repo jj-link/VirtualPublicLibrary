@@ -2,7 +2,6 @@ package com.revature.controllers;
 
 import com.revature.models.Book;
 import com.revature.services.BookService;
-import com.revature.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
