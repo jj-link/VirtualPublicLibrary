@@ -27,8 +27,8 @@ public class User {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name="checked_out",
-            joinColumns = {@JoinColumn(name="book_id")},
-            inverseJoinColumns = {@JoinColumn(name="user_id")}
+            joinColumns = {@JoinColumn(name="user_id")},
+            inverseJoinColumns = {@JoinColumn(name="book_id")}
     )
     List<Book> checkedOut; // @JsonIgnore ??
 
