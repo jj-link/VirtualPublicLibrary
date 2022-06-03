@@ -230,15 +230,13 @@ public class BookControllerIntegrationTest {
     @Test
     @Transactional
     public void testGetBookByTitleSuccessful() throws Exception {
-        LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("title", "Principles of Programming Languages");
-
         Book book = new Book("Principles of Programming Languages", "Ian Mackie", 3, "Programming teaching basic",  9781848820319l, 2014);
         br.save(book);
 
-        mockMvc.perform( get("/book/get-books-by-title")
+        // String title = book.getTitle().replaceAll(" ", "%20");
+
+        mockMvc.perform( get("/book/get-books-by-title/" + book.getTitle())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(registerBody))
                 )
                 .andDo(print())
                 .andExpect(status().isAccepted());
@@ -255,15 +253,11 @@ public class BookControllerIntegrationTest {
     @Test
     @Transactional
     public void testGetBookByTitleUnsuccessful() throws Exception {
-        LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("title", "Principles of Programming Languages");
-
         Book book = new Book("Principles", "Ian Mackie", 3, "Programming teaching basic",  9781848820319l, 2014);
         br.save(book);
 
-        mockMvc.perform( get("/book/get-books-by-title")
+        mockMvc.perform( get("/book/get-books-by-title/Title")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(registerBody))
                 )
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -274,17 +268,13 @@ public class BookControllerIntegrationTest {
     @Test
     @Transactional
     public void testGetBookByAuthorSuccessful() throws Exception {
-        LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("author", "Ian Mackie");
-
         Book book1 = new Book("Principles of Programming Languages", "Ian Mackie", 3, "Programming teaching basic",  9781848820319l, 2014);
         Book book2 = new Book("BookTitle2", "Author2", 2, "Summary2", 9781848820414l, 2016);
         br.save(book1);
         br.save(book2);
 
-        mockMvc.perform( get("/book/get-books-by-author")
+        mockMvc.perform( get("/book/get-books-by-author/" + book1.getAuthor())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(registerBody))
                 )
                 .andDo(print())
                 .andExpect(status().isAccepted());
@@ -303,17 +293,13 @@ public class BookControllerIntegrationTest {
     @Test
     @Transactional
     public void testGetBookByAuthorUnsuccessful() throws Exception {
-        LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("author", "Ian Mackie");
-
         Book book1 = new Book("Principles of Programming Languages", "Ian", 3, "Programming teaching basic",  9781848820319l, 2014);
         Book book2 = new Book("BookTitle2", "Author2", 2, "Summary2", 9781848820414l, 2016);
         br.save(book1);
-        br.save(book2);
 
-        mockMvc.perform( get("/book/get-books-by-author")
+
+        mockMvc.perform( get("/book/get-books-by-author/" + book2.getAuthor())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(registerBody))
                 )
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -325,8 +311,7 @@ public class BookControllerIntegrationTest {
     @Test
     @Transactional
     public void testGetBooksByGenreIdSuccessful() throws Exception {
-        LinkedHashMap<String, Integer> body = new LinkedHashMap<>();
-        body.put("genreId", 1);
+
 
         Book book1 = new Book("Test Book 1", "Test Author 1", 1, "Test summary 1", 1, 2014);
         Book book2 = new Book("Test Book 2", "Test Author 2", 2, "Test summary 2", 2, 2014);
@@ -342,9 +327,9 @@ public class BookControllerIntegrationTest {
         br.save(book5);
         br.save(book6);
 
-        mockMvc.perform( get("/book/get-books-by-genreId")
+        mockMvc.perform( get("/book/get-books-by-genreId/" + book1.getGenreId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(body))
+
                 )
                 .andDo(print())
                 .andExpect(status().isAccepted());
@@ -356,8 +341,6 @@ public class BookControllerIntegrationTest {
     @Test
     @Transactional
     public void getBooksByGenreIdUnsuccessful() throws Exception {
-        LinkedHashMap<String, Integer> body = new LinkedHashMap<>();
-        body.put("genreId", 1);
 
         Book book2 = new Book("Test Book 2", "Test Author 2", 2, "Test summary 2", 2, 2014);
         Book book3 = new Book("Test Book 3", "Test Author 3", 3, "Test summary 3", 3, 2014);
@@ -369,9 +352,8 @@ public class BookControllerIntegrationTest {
         br.save(book4);
         br.save(book5);
 
-        mockMvc.perform( get("/book/get-books-by-genreId")
+        mockMvc.perform( get("/book/get-books-by-genreId/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(body))
                 )
                 .andDo(print())
                 .andExpect(status().isAccepted());
@@ -386,15 +368,12 @@ public class BookControllerIntegrationTest {
     @Test
     @Transactional
     public void testGetBookByIsbnSuccessful() throws Exception {
-        LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("isbn", "9781848820319");
-
         Book book = new Book("Principles of Programming Languages", "Ian Mackie", 3, "Programming teaching basic",  9781848820319l, 2014);
         br.save(book);
 
-        mockMvc.perform( get("/book/get-books-by-isbn")
+        mockMvc.perform( get("/book/get-books-by-isbn/" + book.getIsbn())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(registerBody))
+
                 )
                 .andDo(print())
                 .andExpect(status().isAccepted());
@@ -412,15 +391,10 @@ public class BookControllerIntegrationTest {
     @Test
     @Transactional
     public void testGetBookByIsbnUnsuccessful() throws Exception {
-        LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("isbn", "9781848820319");
-
         Book book = new Book("Principles of Programming Languages", "Ian Mackie", 3, "Programming teaching basic",  0, 2014);
-        br.save(book);
 
-        mockMvc.perform( get("/book/get-books-by-isbn")
+        mockMvc.perform( get("/book/get-books-by-isbn/" + book.getIsbn())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(registerBody))
                 )
                 .andDo(print())
                 .andExpect(status().isNotFound());

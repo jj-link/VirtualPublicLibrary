@@ -95,7 +95,7 @@ public class UserController {
 
             us.checkOutBook(userId, isbn);
             String message = "Book has been checked out" ;
-            return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(us.getCheckedOutBooks(userId), HttpStatus.ACCEPTED);
 
         } catch (Exception e) {
             e.printStackTrace();

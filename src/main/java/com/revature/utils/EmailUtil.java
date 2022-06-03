@@ -19,7 +19,7 @@ public class EmailUtil {
      */
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("1000101mail@gmail.com");
+        message.setFrom("virtualpubliclibrary@gmail.com");
         message.setTo(to);
         message.setText(body);
         message.setSubject(subject);

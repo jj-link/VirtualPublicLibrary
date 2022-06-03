@@ -62,6 +62,7 @@ public class User {
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+        this.checkedOut = new ArrayList<>();
     }
 
     public User(String email, String password, String firstName, String lastName) {
@@ -70,6 +71,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userRole = 1;
+        this.checkedOut = new ArrayList<>();
     }
 
     public int getUserId() {
