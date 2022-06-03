@@ -120,7 +120,7 @@ public class BookController {
             return new ResponseEntity<>(book, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Could not update book", HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Could not update book", HttpStatus.NOT_FOUND);
         }
     }
 
