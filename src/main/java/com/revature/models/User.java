@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@SequenceGenerator(name="seq", initialValue=52, allocationSize=100000)
 @Table(name="users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
     private int userId;
 
     @Column(name="email", unique = true, nullable = false)

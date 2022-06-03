@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
     @Column(name="book_id")
     private int bookId;
 
