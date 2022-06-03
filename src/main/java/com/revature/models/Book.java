@@ -3,11 +3,12 @@ package com.revature.models;
 import javax.persistence.*;
 
 @Entity
+@SequenceGenerator(name="seq", initialValue=52, allocationSize=100000)
 @Table(name="books")
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq")
     @Column(name="book_id")
     private int bookId;
 
