@@ -327,13 +327,9 @@ public class UserControllerIntegrationTest {
         br.save(book3);
 
         User testUser = ur.save(u);
-        LinkedHashMap<String, String> body = new LinkedHashMap<>();
-        body.put("userId", "" + testUser.getUserId());
 
-
-        String result = mockMvc.perform(get("/user/checkout-show")
+        String result = mockMvc.perform(get("/user/checkout-show/" + testUser.getUserId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(body))
         )
                 .andDo(print())
                 .andExpect(status().isAccepted())
