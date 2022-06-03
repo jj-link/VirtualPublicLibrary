@@ -1,9 +1,13 @@
 package com.revature.integration;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.VirtualPublicLibraryApplication;
+import com.revature.models.Book;
 import com.revature.models.User;
+import com.revature.repo.BookRepo;
 import com.revature.repo.UserRepo;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +19,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,12 +43,21 @@ public class UserControllerIntegrationTest {
     @Autowired
     private UserRepo ur;
 
+    @Autowired
+    private BookRepo br;
+
     @BeforeEach
-    public void resetDatabase() { ur.deleteAll(); }
+    public void resetDatabase() {
+        ur.deleteAll();
+        br.deleteAll(); }
+
+    @BeforeEach
+    public void resetBookDatabase() { br.deleteAll(); }
 
     private ObjectMapper om = new ObjectMapper();
 
     // tests for registerNewUser -------------------------------------------------
+
     @Test
     @Transactional
     public void testRegisterNewUserSuccessful() throws Exception {
@@ -59,6 +74,7 @@ public class UserControllerIntegrationTest {
         )
                 .andDo(print())
                 .andExpect(status().isCreated())
+
                 .andExpect(jsonPath("$.email").value("tuser@mail.com"))
                 .andExpect(jsonPath("$.password").value("password"))
                 .andExpect(jsonPath("$.firstName").value("Test"))
@@ -70,11 +86,10 @@ public class UserControllerIntegrationTest {
         assertEquals("password", registered.getPassword());
         assertEquals("Test", registered.getFirstName());
         assertEquals("User", registered.getLastName());
-
     }
 
     @Test
-    @Transactional
+    @Ignore
     public void testRegisterNewUserUnsuccessful() throws Exception {
         LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
 
@@ -97,7 +112,6 @@ public class UserControllerIntegrationTest {
     }
 
     // tests for loginUser -------------------------------------------------
-
 
     @Test
     @Transactional
@@ -136,23 +150,21 @@ public class UserControllerIntegrationTest {
 
     // Test for update User information -------------------------------------
 
-    /*
     @Test
     @Transactional
     public void testUpdateUserSuccessful() throws Exception {
         LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("userId", "3");
         registerBody.put("email", "updatetest@mail.com");
         registerBody.put("password", "updatePassword");
         registerBody.put("firstName", "updateFirstname");
         registerBody.put("lastName", "updateLastname");
 
         User testUser = new User("test@email.com", "password", "firstName", "lastname");
-        testUser.setUserId(3);
-        ur.save(testUser);
+        User user = ur.save(testUser);
 
+        registerBody.put("userId", "" +user.getUserId());
 
-        mockMvc.perform( post("/user/edit")
+        mockMvc.perform(post("/user/edit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(registerBody))
                 )
@@ -171,24 +183,18 @@ public class UserControllerIntegrationTest {
         assertEquals("updateLastname", updatedUser.getLastName());
     }
 
-     */
 
-/*
     @Test
     @Transactional
     public void testUpdateUserUnsuccessful() throws Exception {
         LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("userId", "5");
+
         registerBody.put("email", "updatetest@mail.com");
         registerBody.put("password", "updatePassword");
         registerBody.put("firstName", "updateFirstname");
         registerBody.put("lastName", "updateLastname");
 
-
-        User testUser = new User("test@email.com", "password", "firstName", "lastname");
-        testUser.setUserId(2);
-        ur.save(testUser);
-
+        registerBody.put("userId", "" + 2);
         mockMvc.perform(post("/user/edit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(registerBody))
@@ -204,24 +210,22 @@ public class UserControllerIntegrationTest {
     @Transactional
     public void testViewUserSuccessful() throws Exception {
         LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
-        registerBody.put("userId", "4");
-
-
 
         User testUser = new User("test@email.com", "password", "firstName", "lastname");
-        testUser.setUserId(4);
-        testUser.setUserRole(1);
-        ur.save(testUser);
 
+        User expectUser = ur.save(testUser);
+        int expectId = expectUser.getUserId();
+        int expectUserRole = expectUser.getUserRole();
 
+        registerBody.put("userId", "" + expectId);
         mockMvc.perform(get("/user/view-user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(om.writeValueAsString(registerBody))
                 )
                 .andDo(print())
                 .andExpect(status().isAccepted());
-
     }
+
 
     @Test
     @Transactional
@@ -240,5 +244,108 @@ public class UserControllerIntegrationTest {
 
     }
 
-*/
+
+    // tests for getAllUsers --------------------------------------------------
+
+    @Test
+    @Transactional
+    public void testGetAllUsersSuccessful() throws Exception {
+
+        User u1 = new User("tuser1@mail.com", "password", "Test", "One");
+        User u2 = new User("tuser@mail.com", "password", "Test", "Two");
+
+        ur.save(u1);
+        ur.save(u2);
+
+        String result = mockMvc.perform(get("/user/all-users")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isAccepted())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        List<User> users = om.readValue(result, new TypeReference<List<User>>() { });
+
+        System.out.println("Getting all users");
+
+        for (User u : users) System.out.println(u.toString());
+    }
+
+    // tests for checkOutBook -------------------------------------------------
+
+    // TODO
+
+    @Test
+    @Transactional
+    public void testUserCheckOutUnsuccessful() throws Exception {
+        LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
+
+        User testUser = new User("test@email.com", "password", "firstName", "lastname");
+
+        User expectUser = ur.save(testUser);
+
+        int expectId = expectUser.getUserId();
+
+        registerBody.put("userId", "" + expectId);
+        registerBody.put("isbn", "" + 9781848820319l);
+
+        /*
+        Book book = new Book("Principles of Programming Languages", "Ian Mackie", 3, "Programming teaching basic",  9781848820319l, 2014);
+        Book expectBook = br.save(book);
+        System.out.println(expectUser);
+        long expectBookIsbn = expectBook.getIsbn();
+
+        */
+        mockMvc.perform(post("/user/checkout-book")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(registerBody))
+                )
+                .andDo(print())
+                .andExpect(status().isConflict());
+
+    }
+    // tests for getCheckedOutBooks -------------------------------------------
+
+    // TODO
+    @Test
+    @Transactional
+    public void testGetCheckedOutBooksSuccessful() throws Exception {
+        User u = new User("tuser@mail.com", "password", "Test", "User");
+        Book book1 = new Book(1, "Test Book 1", "Test Author 1", 1, "Test summary 1", 1, 1, 2014);
+        Book book2 = new Book(2, "Test Book 2", "Test Author 2", 2, "Test summary 2", 2, 2, 2014);
+        Book book3 = new Book(3, "Test Book 3", "Test Author 3", 3, "Test summary 3", 3, 3, 2014);
+        List<Book> testBooks = new ArrayList<>();
+        testBooks.add(book1);
+        testBooks.add(book2);
+        testBooks.add(book3);
+        u.setCheckedOut(testBooks);
+
+        br.save(book1);
+        br.save(book2);
+        br.save(book3);
+
+        User testUser = ur.save(u);
+        LinkedHashMap<String, String> body = new LinkedHashMap<>();
+        body.put("userId", "" + testUser.getUserId());
+
+
+        String result = mockMvc.perform(get("/user/checkout-show")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(body))
+        )
+                .andDo(print())
+                .andExpect(status().isAccepted())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        List<Book> books = om.readValue(result, new TypeReference<List<Book>>() { });
+
+        System.out.println("Getting all checked out books");
+        for (Book b : books) System.out.println(b.toString());
+        assertEquals(3, books.size());
+    }
+
 }

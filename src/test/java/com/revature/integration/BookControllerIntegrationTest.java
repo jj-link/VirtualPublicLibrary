@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,7 +112,56 @@ public class BookControllerIntegrationTest {
 
     // tests for updateBook ---------------------------------------------------
 
+    @Test
+    @Transactional
+    public void testUpdateBookSuccessful() throws Exception {
+        LinkedHashMap<String, String> body = new LinkedHashMap<>();
 
+        body.put("title", "Test Title");
+        body.put("author", "Test Author");
+        body.put("genreId", "1");
+        body.put("summary", "Test summary");
+        body.put("isbn", "1");
+        body.put("yearPublished", "2015");
+
+        Book testBook = new Book("Title", "Author", 2, "Summary", 2, 2017);
+        Book book = br.save(testBook);
+        body.put("bookId", "" +book.getBookId());
+
+        mockMvc.perform(put("/book/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(body))
+                )
+                .andDo(print())
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.title").value("Test Title"))
+                .andExpect(jsonPath("$.author").value("Test Author"))
+                .andExpect(jsonPath("$.genreId").value(1))
+                .andExpect(jsonPath("$.summary").value("Test summary"))
+                .andExpect(jsonPath("$.isbn").value(1))
+                .andExpect(jsonPath("$.yearPublished").value(2015));
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateBookUnsuccessful() throws Exception {
+        LinkedHashMap<String, String> registerBody = new LinkedHashMap<>();
+        registerBody.put("title", "updateTitle");
+        registerBody.put("author", "updateAuthor");
+        registerBody.put("genreId", "1");
+        registerBody.put("summary", "updateSummary");
+        registerBody.put("isbn", "123456789");
+        registerBody.put("yearPublished", "2012");
+
+        registerBody.put("book_id", "" + 2);
+
+        mockMvc.perform(put("/book/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(registerBody))
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 
     // tests for getAllBooks --------------------------------------------------
 

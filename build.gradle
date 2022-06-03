@@ -22,7 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	// Use JUnit test framework.
-	// testImplementation 'junit:junit:4.13.2'
+	testImplementation 'junit:junit:4.13.2'
 
 	/*
 	// This dependency is used by the application.

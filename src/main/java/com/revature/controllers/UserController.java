@@ -53,6 +53,7 @@ public class UserController {
         try{
             return new ResponseEntity<>(us.updateUser(id, email, password, firstName, lastName), HttpStatus.ACCEPTED);
         }catch(Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>("Invalid email or password", HttpStatus.NOT_ACCEPTABLE);
         }
     }
