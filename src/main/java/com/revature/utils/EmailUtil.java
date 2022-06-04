@@ -19,7 +19,7 @@ public class EmailUtil {
      */
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("virtualpubliclibrary@gmail.com");
+        message.setFrom("virtualpubliclib@gmail.com");
         message.setTo(to);
         message.setText(body);
         message.setSubject(subject);
@@ -27,6 +27,12 @@ public class EmailUtil {
         mailSender.send(message);
     }
 
+    /**
+     * Generates a welcome email for new users
+     * @param firstName The new user's first name
+     * @param lastName The new user's last name
+     * @return A welcome message for the user
+     */
     public String generateWelcomeEmail(String firstName, String lastName) {
         String result = "";
         result += "Dear " + firstName + " " + lastName + ",\n\n";
