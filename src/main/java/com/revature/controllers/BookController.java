@@ -132,4 +132,15 @@ public class BookController {
         }
     }
 
-}
+    @GetMapping("/book/search/{input}")
+        public ResponseEntity<Object> handleGetBooksByGenreId(@PathVariable("input") String input) {
+            try {
+                return new ResponseEntity<>(bs.searchBooks(input), HttpStatus.ACCEPTED);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ResponseEntity<>("Book Search Failed", HttpStatus.NOT_FOUND);
+            }
+        }
+    }
+
+
