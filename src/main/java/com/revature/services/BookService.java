@@ -185,4 +185,8 @@ public class BookService {
         return result;
     }
 
+    public List<Book> searchBooks(String input) {
+        return br.searchBooks(input);
+    }
+
 }
