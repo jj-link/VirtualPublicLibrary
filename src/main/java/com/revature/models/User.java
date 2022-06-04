@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@SequenceGenerator(name="seq", initialValue=52, allocationSize=100000)
 @Table(name="users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
     private int userId;
 
     @Column(name="email", unique = true, nullable = false)
@@ -62,6 +63,7 @@ public class User {
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+        this.checkedOut = new ArrayList<>();
     }
 
     public User(String email, String password, String firstName, String lastName) {
@@ -70,6 +72,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userRole = 1;
+        this.checkedOut = new ArrayList<>();
     }
 
     public int getUserId() {

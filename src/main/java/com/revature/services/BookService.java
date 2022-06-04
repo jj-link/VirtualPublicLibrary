@@ -37,7 +37,7 @@ public class BookService {
     public Book createBook(String title, String author, int genreId, String summary, long isbn, int yearPublished)
         throws ExistingBookException{
         if (br.findBookByIsbn(isbn) != null) {
-            throw new ExistingBookException("This book is already exist.");
+            throw new ExistingBookException("This book already exists.");
         }
         Book result = new Book(title, author, genreId, summary, isbn, yearPublished);
         return br.save(result);

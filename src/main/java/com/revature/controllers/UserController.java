@@ -77,12 +77,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/checkout-show")
-    public ResponseEntity<Object> handleCheckOutShow(@RequestBody LinkedHashMap<String, String> body){
+    @GetMapping("/user/checkout-show/{userId}")
+    public ResponseEntity<Object> handleCheckOutShow(@PathVariable("userId") int userId){
         try {
-            int userId = Integer.parseInt(body.get("userId"));
             return new ResponseEntity<>(us.getCheckedOutBooks(userId), HttpStatus.ACCEPTED);
-
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Could not find user", HttpStatus.CONFLICT);
@@ -97,11 +95,11 @@ public class UserController {
 
             us.checkOutBook(userId, isbn);
             String message = "Book has been checked out" ;
-            return new ResponseEntity<>(message, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(us.getCheckedOutBooks(userId), HttpStatus.ACCEPTED);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Book already exists", HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Could not check out book", HttpStatus.CONFLICT);
         }
     }
 

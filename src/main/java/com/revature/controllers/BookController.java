@@ -44,10 +44,10 @@ public class BookController {
         }
     }
 
-    @GetMapping("/book/get-books-by-title")
-    public ResponseEntity<Object> handleGetBooksByTitle(@RequestBody LinkedHashMap<String, String> body) {
+    @GetMapping("/book/get-books-by-title/{title}")
+    public ResponseEntity<Object> handleGetBooksByTitle(@PathVariable("title") String title) {
         try {
-            String title = body.get("title");
+            title.replaceAll("%20", " ");
             return new ResponseEntity<>(bs.getBookByTitle(title), HttpStatus.ACCEPTED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,30 +55,28 @@ public class BookController {
         }
     }
 
-    @GetMapping("/book/get-books-by-author")
-    public ResponseEntity<Object> handleGetBooksByAuthor(@RequestBody LinkedHashMap<String, String> body) {
+    @GetMapping("/book/get-books-by-author/{author}")
+    public ResponseEntity<Object> handleGetBooksByAuthor(@PathVariable("author") String author) {
         try {
-            String author = body.get("author");
+            author.replaceAll("%20", " ");
             return new ResponseEntity<>(bs.getBookByAuthor(author), HttpStatus.ACCEPTED);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Could not find this book", HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/book/get-books-by-isbn")
-    public ResponseEntity<Object> handleGetBooksByIsbn(@RequestBody LinkedHashMap<String, String> body) {
+    @GetMapping("/book/get-books-by-isbn/{isbn}")
+    public ResponseEntity<Object> handleGetBooksByIsbn(@PathVariable("isbn") long isbn) {
         try {
-            long isbn = Long.parseLong(body.get("isbn"));
             return new ResponseEntity<>(bs.getBookByIsbn(isbn), HttpStatus.ACCEPTED);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Could not find this book", HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/book/get-books-by-genreId")
-    public ResponseEntity<Object> handleGetBooksByGenreId(@RequestBody LinkedHashMap<String, String> body) {
+    @GetMapping("/book/get-books-by-genreId/{genreId}")
+    public ResponseEntity<Object> handleGetBooksByGenreId(@PathVariable("genreId") int genreId) {
         try {
-            int genreId = Integer.parseInt(body.get("genreId"));
             return new ResponseEntity<>(bs.getBookByGenreId(genreId), HttpStatus.ACCEPTED);
         } catch (Exception e) {
             e.printStackTrace();
